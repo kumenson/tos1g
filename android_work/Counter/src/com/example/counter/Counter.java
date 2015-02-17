@@ -6,18 +6,56 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.content.Context;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Counter extends ActionBarActivity {
 
 	private int mCount;
-	
+    private TextView textView;
+    private String fileName = "testfile.txt";
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_counter);
-	}
 
-	@Override
+        textView = (TextView) findViewById(R.id.textView1);
+        
+        String str = readFile(fileName);
+        if(str != null){
+            textView.setText(str);
+        }
+        else{
+            textView.setText("0");
+        }
+    }
+
+    // ファイルを読み出し
+    public String readFile(String file) {
+        FileInputStream fileInputStream;
+        String text = null;
+ 
+        try {
+            fileInputStream = openFileInput(file);
+            String lineBuffer = null;
+ 
+            BufferedReader reader= new BufferedReader(new InputStreamReader(fileInputStream,"UTF-8"));
+            while( (lineBuffer = reader.readLine()) != null ) {
+                text = lineBuffer ;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+ 
+        return text;
+    }
+    
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.counter, menu);
@@ -40,5 +78,25 @@ public class Counter extends ActionBarActivity {
 		mCount++;
 		TextView countView = (TextView) findViewById(R.id.textView1);
 		countView.setText(String.valueOf(mCount));
-	}
+    }
+
+	public void save_click(View view) {
+        // テキストを取得
+        String text = textView.getText().toString();
+        saveFile(fileName, text);
+    }
+
+	// ファイルを保存
+    public void saveFile(String file, String str) {
+        FileOutputStream fileOutputstream = null;
+ 
+        try {
+            fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE);
+            fileOutputstream.write(str.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+ 
+    }
+
 }
