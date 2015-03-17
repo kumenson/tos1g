@@ -7,27 +7,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 public class Counter extends ActionBarActivity {
 
 	private int mCount;
+	private int n;
     private TextView textView;
-    private EditText editText;
     private String fileName = "testfile.txt";
-    private Button button;
-    
+    Random r = new Random();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,48 +29,15 @@ public class Counter extends ActionBarActivity {
 
         textView = (TextView) findViewById(R.id.textView1);
         
-        editText = (EditText) findViewById(R.id.textView1);
-        editText.setOnKeyListener(new View.OnKeyListener(){
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // テキストを取得
-                String text = editText.getText().toString();
- 
-                saveFile(fileName, text);
- 
-                return false;
-            }
-        });
- 
-        button = (Button) findViewById(R.id.button2);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = readFile(fileName);
-                if(str != null){
-                    textView.setText(str);
-                }
-                else{
-                    textView.setText("read file error");
-                }
-            }
-        });
- 
+        String str = readFile(fileName);
+        if(str != null){
+            textView.setText(str);
+        }
+        else{
+            textView.setText("0");
+        }
     }
 
-    // ファイルを保存
-    public void saveFile(String file, String str) {
-        FileOutputStream fileOutputstream = null;
- 
-        try {
-            fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE);
-            fileOutputstream.write(str.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
- 
-    }
- 
     // ファイルを読み出し
     public String readFile(String file) {
         FileInputStream fileInputStream;
@@ -117,8 +78,34 @@ public class Counter extends ActionBarActivity {
 	}
 
 	public void click(View view) {
-		mCount++;
-		TextView countView = (TextView) findViewById(R.id.textView1);
+	    n = r.nextInt(10);
+
+	    mCount++;
+
+	    TextView countView = (TextView) findViewById(R.id.textView1);
 		countView.setText(String.valueOf(mCount));
+ 
+		if (n != 0) {
+			} else {
+				countView.setText("GAME OVER");
+			}
+		}
+
+	public void save_click(View view) {
+        // テキストを取得
+        String text = textView.getText().toString();
+        saveFile(fileName, text);
     }
+
+	// ファイルを保存
+	public void saveFile(String file, String str) {
+		FileOutputStream fileOutputstream = null;
+ 
+		try {
+			fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE);
+			fileOutputstream.write(str.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

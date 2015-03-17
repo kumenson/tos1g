@@ -5,20 +5,25 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.content.Context;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 public class Counter extends ActionBarActivity {
 
 	private int mCount;
+	private int n;
     private TextView textView;
     private String fileName = "testfile.txt";
-    
+    Random r = new Random();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,10 +80,20 @@ public class Counter extends ActionBarActivity {
 	}
 
 	public void click(View view) {
-		mCount++;
-		TextView countView = (TextView) findViewById(R.id.textView1);
+	    n = r.nextInt(10);
+
+	    mCount++;
+
+	    TextView countView = (TextView) findViewById(R.id.textView1);
 		countView.setText(String.valueOf(mCount));
-    }
+ 
+		if (n != 0) {
+			} else {
+				countView.setText("GAME OVER");
+				Button mBtn = (Button)findViewById(R.id.button1);
+				mBtn.setEnabled(false);
+			}
+		}
 
 	public void save_click(View view) {
         // テキストを取得
@@ -87,16 +102,14 @@ public class Counter extends ActionBarActivity {
     }
 
 	// ファイルを保存
-    public void saveFile(String file, String str) {
-        FileOutputStream fileOutputstream = null;
+	public void saveFile(String file, String str) {
+		FileOutputStream fileOutputstream = null;
  
-        try {
-            fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE);
-            fileOutputstream.write(str.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
- 
-    }
-
+		try {
+			fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE);
+			fileOutputstream.write(str.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
